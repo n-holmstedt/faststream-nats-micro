@@ -28,6 +28,57 @@ async def setup():
     app.service_api.add_endpoints()
 ```
 See ``app.py`` for full example.
+
+Starting the application, the fastream app should be visible as a nats micro instance. 
+
+```cli
+~/code/faststream-nats-micro$ faststream run app:app
+2025-01-08 15:15:36,588 INFO     - FastStream app starting...
+```
+```cli
+~/code/faststream-nats-micro$ nats micro ls
+╭───────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                       All Micro Services                                      │
+├───────────────┬─────────┬──────────────────────────────────────┬──────────────────────────────┤
+│ Name          │ Version │ ID                                   │ Description                  │
+├───────────────┼─────────┼──────────────────────────────────────┼──────────────────────────────┤
+│ TSELSE3919942 │ 0.0.1   │ 0dc58018-8dd9-48e1-b270-158f77c45f79 │ FastStream Service API Class │
+╰───────────────┴─────────┴──────────────────────────────────────┴──────────────────────────────╯
+```
+```cli
+~/code/faststream-nats-micro$ nats micro info TSELSE3919942
+Service Information
+
+          Service: TSELSE3919942 (e0631efd-dca0-4521-8c06-ec2efb8a9528)
+      Description: FastStream Service API Class
+          Version: 0.0.1
+
+Endpoints:
+
+               Name: test
+            Subject: name.*.test
+        Queue Group: just_a_string
+
+               Name: entirely
+            Subject: other.subject.entirely
+        Queue Group: just_a_string
+
+Statistics for 2 Endpoint(s):
+
+  test Endpoint Statistics:
+
+           Requests: 0 in group "just_a_string"
+    Processing Time: 0s (average 0s)
+            Started: 2025-01-08 15:15:36 (1m33s ago)
+             Errors: 0
+
+  entirely Endpoint Statistics:
+
+           Requests: 0 in group "just_a_string"
+    Processing Time: 0s (average 0s)
+            Started: 2025-01-08 15:15:36 (1m33s ago)
+             Errors: 0
+```
 ## Caveats
 * This project is made public for insight into faststream, NATS and its micro framework. Its not tested for any production usecases.
 * The implementation uses the non-public subscribers of the FastStream broker, which is slightly awkward. Couldn't find any public API for this.
