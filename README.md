@@ -21,7 +21,7 @@ app.service_api = NatsServiceAPI(
     broker=broker                                  # The FastAPI broker
 )
 ```
-Once added to the app, run ``add_endpoints()`` at startup to add your endpoints to the service api.
+Once added to the app, run ``add_endpoints()`` at startup to add your faststream endpoints to the service api.
 ```python
 @app.on_startup
 async def setup():
@@ -79,6 +79,26 @@ Statistics for 2 Endpoint(s):
             Started: 2025-01-08 15:15:36 (1m33s ago)
              Errors: 0
 ```
+Trying out the statistics interface in ``app.py`` (with included 10% error simulation):
+```cli
+~/code/faststream-nats-micro$ nats req name.foo.test 'foobar' --count=100
+
+100 / 100 [==================================================================]    0s
+```
+```cli
+~/code/faststream-nats-micro$ nats micro stats TSELSE3919942
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                           TSELSE3919942 Service Statistics                                           │
+├──────────────────────────────────────┬──────────┬──────────┬───────────────┬────────┬─────────────────┬──────────────┤
+│ ID                                   │ Endpoint │ Requests │ Queue Group   │ Errors │ Processing Time │ Average Time │
+├──────────────────────────────────────┼──────────┼──────────┼───────────────┼────────┼─────────────────┼──────────────┤
+│ 3cb2fc1d-92ed-43da-aebc-935d84dfc24e │ test     │ 100      │ just_a_string │ 11     │ 1ms             │ 10µs         │
+│                                      │ entirely │ 0        │ just_a_string │ 0      │ 0s              │ 0s           │
+├──────────────────────────────────────┼──────────┼──────────┼───────────────┼────────┼─────────────────┼──────────────┤
+│                                      │          │ 100      │               │ 11     │ 1MS             │ 9ΜS          │
+╰──────────────────────────────────────┴──────────┴──────────┴───────────────┴────────┴─────────────────┴─────────────
+```
+
 ## Caveats
 * This project is made public for insight into faststream, NATS and its micro framework. Its not tested for any production usecases.
 * The implementation uses the non-public subscribers of the FastStream broker, which is slightly awkward. Couldn't find any public API for this.
