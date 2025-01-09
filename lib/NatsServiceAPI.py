@@ -46,7 +46,6 @@ class NatsServiceAPI:
     def add_endpoints(self) -> None:
         # There is no public api for subscribers in the broker.
         for endpoint in self._broker._subscribers.values():
-            print(endpoint.__dict__)
             if endpoint.subject.startswith("$SRV"):
                 continue
 
